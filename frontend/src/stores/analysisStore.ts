@@ -1,7 +1,6 @@
-import { defineStore } from 'pinia';
+import type { IAnalysisResult, IApiError, IApiResponse } from '@/interfaces/IAnalysis';
 import axios from 'axios';
-import type { IAnalysisResult, IApiResponse, IApiError } from '@/interfaces/IAnalysis';
-import { api } from '@/services/api';
+import { defineStore } from 'pinia';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
