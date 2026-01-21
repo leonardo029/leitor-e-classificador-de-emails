@@ -1,0 +1,14 @@
+Assunto: URGENTE - Erro 503 no Portal de Fornecedores
+
+Prezados,
+
+Estou tentando acessar o portal para realizar o upload das notas fiscais de serviços deste mês, mas estou recebendo consistentemente o erro "503 Service Unavailable" desde as 09:00 da manhã.
+
+Já tentei limpar o cache e acessar por outro navegador (Chrome e Edge), mas o problema persiste. O prazo para envio fecha hoje às 17h e não posso ser penalizado por uma falha sistêmica.
+
+Aguardo um retorno urgente com a previsão de normalização ou uma alternativa para envio manual.
+
+Att,
+Carlos Mendes
+Gerente Financeiro - Transportadora LogVeloz
+CNPJ: 12.345.678/0001-90
