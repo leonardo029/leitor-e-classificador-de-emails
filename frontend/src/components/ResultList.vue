@@ -115,10 +115,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { mapState, mapActions } from 'pinia';
 import { useAnalysisStore } from '@/stores/analysisStore';
-import type { IAnalysisResult } from '@/interfaces/IAnalysis';
+import { mapActions, mapState } from 'pinia';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'ResultList',
