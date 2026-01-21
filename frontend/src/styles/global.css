@@ -1,0 +1,93 @@
+* {
+  font-family: 'Inter', sans-serif !important;
+  letter-spacing: -0.01em;
+}
+
+body {
+  font-family: 'Inter', sans-serif !important;
+  letter-spacing: -0.01em;
+  background-color: #FFFFFF !important;
+  color: #000000 !important;
+}
+
+.v-application {
+  font-family: 'Inter', sans-serif !important;
+  letter-spacing: -0.01em;
+  background-color: #FFFFFF !important;
+}
+
+.v-application * {
+  font-family: 'Inter', sans-serif !important;
+  letter-spacing: -0.01em;
+}
+
+.text-h1, .text-h2, .text-h3, .text-h4, .text-h5, .text-h6 {
+  letter-spacing: -0.02em !important;
+  font-weight: 500 !important;
+  color: #000000 !important;
+  line-height: 1.15 !important;
+}
+
+.font-weight-bold {
+  font-weight: 500 !important;
+  letter-spacing: -0.02em !important;
+  color: #000000 !important;
+}
+
+.font-weight-medium {
+  font-weight: 500 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.font-weight-regular {
+  font-weight: 400 !important;
+  letter-spacing: -0.01em !important;
+}
+
+.text-medium-emphasis {
+  color: #757575 !important;
+}
+
+.text-caption {
+  color: #9E9E9E !important;
+}
+
+.v-card {
+  background-color: #FFFFFF !important;
+}
+
+.v-card-title {
+  color: #000000 !important;
+}
+
+.v-card-text {
+  color: #000000 !important;
+}
+
+.text-body-1, .text-body-2 {
+  color: #000000 !important;
+  line-height: 1.5 !important;
+  letter-spacing: -0.01em !important;
+}
+
+.text-body-2.text-medium-emphasis {
+  color: #757575 !important;
+}
+
+.card-title {
+  color: #000000 !important;
+}
+
+.v-main {
+  background-color: #FFFFFF !important;
+}
+
+.v-container {
+  background-color: #FFFFFF !important;
+}
+
+strong {
+  color: #000000 !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.02em !important;
+}

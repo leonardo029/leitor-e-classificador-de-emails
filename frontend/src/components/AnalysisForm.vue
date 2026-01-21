@@ -1,6 +1,6 @@
 <template>
   <v-card class="mb-6" elevation="2">
-    <v-card-title class="text-h5 pa-4">Analisar Email</v-card-title>
+    <v-card-title class="text-h5 pa-4 card-title">Analisar Email</v-card-title>
     
     <v-card-text>
       <v-alert

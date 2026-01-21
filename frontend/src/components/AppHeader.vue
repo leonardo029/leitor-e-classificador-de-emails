@@ -1,20 +1,38 @@
 <template>
-  <v-app-bar color="primary" dark elevation="2">
-    <v-app-bar-title class="d-flex align-center">
-      <v-icon class="mr-2">mdi-email-fast</v-icon>
-      <span class="text-h6 font-weight-bold">Email Classifier</span>
-    </v-app-bar-title>
+  <v-app-bar color="white" elevation="0" class="app-bar-custom">
     <v-spacer></v-spacer>
-    <v-chip variant="outlined" color="white">
-      AutoU Challenge
-    </v-chip>
+    <div class="d-flex align-center mr-4">
+      <img 
+        :src="logoAutou" 
+        alt="AutoU Logo" 
+        class="logo-autou"
+      />
+    </div>
   </v-app-bar>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import logoAutou from '@/assets/images/logo-autou.webp';
 
 export default defineComponent({
-  name: 'AppHeader'
+  name: 'AppHeader',
+  data() {
+    return {
+      logoAutou
+    };
+  }
 });
 </script>
+
+<style scoped>
+.logo-autou {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
+.app-bar-custom {
+  border-bottom: 1px solid #E0E0E0;
+}
+</style>

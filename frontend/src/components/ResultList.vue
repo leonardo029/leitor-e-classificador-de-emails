@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card v-if="results.length > 0" class="mb-4" elevation="2">
-      <v-card-title class="d-flex justify-space-between align-center">
+      <v-card-title class="d-flex justify-space-between align-center card-title">
         <span class="text-h6">
           <v-icon class="mr-2">mdi-history</v-icon>
           Histórico de Análises
