@@ -1,4 +1,4 @@
-# Email Classifier API
+# Email Classifier - Backend
 
 API backend para classificação automática de emails usando Inteligência Artificial e Processamento de Linguagem Natural (NLP).
 
@@ -73,12 +73,6 @@ GEMINI_API_KEY=sua_chave_aqui
 
 As variáveis de ambiente disponíveis estão no arquivo `.env.example`:
 
-- `GEMINI_API_KEY`: Chave da API Google Gemini (obrigatória)
-- `GEMINI_MODEL`: Modelo a ser usado (padrão: gemini-3-flash-preview)
-- `GEMINI_TIMEOUT`: Timeout em segundos (padrão: 30)
-- `MAX_FILE_SIZE_MB`: Tamanho máximo de arquivo em MB (padrão: 10)
-- `MAX_TEXT_LENGTH`: Comprimento máximo de texto (padrão: 50000)
-- `CORS_ORIGINS`: Origens permitidas para CORS (padrão: *)
 - `RATE_LIMIT_PER_MINUTE`: Limite de requisições por minuto (padrão: 10)
 
 ## 🏃 Execução
@@ -95,13 +89,6 @@ A API estará disponível em: `http://localhost:8000`
 
 - **Swagger UI**: http://localhost:8000/docs
 - **ReDoc**: http://localhost:8000/redoc
-
-### Docker
-
-```bash
-docker build -t email-classifier-api .
-docker run -p 8000:8000 --env-file .env email-classifier-api
-```
 
 ## 📡 Endpoints
 
@@ -208,27 +195,3 @@ A API retorna erros padronizados:
 ## 📊 Rate Limiting
 
 A API possui rate limiting configurável (padrão: 10 requisições por minuto por IP).
-
-## 🚢 Deploy
-
-### Render
-
-1. Conecte seu repositório GitHub
-2. Configure as variáveis de ambiente
-3. Deploy automático
-
-### Heroku
-
-```bash
-heroku create email-classifier-api
-heroku config:set GEMINI_API_KEY=sua_chave
-git push heroku main
-```
-
-### Docker
-
-A imagem Docker está pronta para deploy em qualquer plataforma que suporte Docker.
-
-## 📝 Licença
-
-Este projeto foi desenvolvido para o desafio da AutoU.
