@@ -1,36 +1,34 @@
 import json
 import os
 from typing import Dict, Any
-import google.generativeai as genai
+from google import genai
 
 from app.utils.exceptions import AIAPIException
 from app.utils.logger import logger
 
 
-_gemini_configured = False
+_gemini_client = None
 
 
-def _configure_gemini():
-    global _gemini_configured
-    if _gemini_configured:
-        return
+def _get_gemini_client():
+    global _gemini_client
+    if _gemini_client is not None:
+        return _gemini_client
     
     api_key = os.getenv('GEMINI_API_KEY')
     if not api_key:
         raise AIAPIException("GEMINI_API_KEY não configurada")
     
-    genai.configure(api_key=api_key)
-    _gemini_configured = True
+    _gemini_client = genai.Client(api_key=api_key)
+    return _gemini_client
 
 
 def analyze_email(raw_text: str, nlp_keywords: str) -> Dict[str, Any]:
-    _configure_gemini()
+    client = _get_gemini_client()
     
-    model_name = os.getenv('GEMINI_MODEL', 'gemini-3-flash-preview')
+    model_name = os.getenv('GEMINI_MODEL', 'gemini-2.0-flash')
     
     try:
-        model = genai.GenerativeModel(model_name)
-        
         prompt = f"""Atue como um sistema de triagem de emails corporativos para uma empresa financeira.
 Analise o seguinte email e retorne um JSON.
 
@@ -53,7 +51,10 @@ Responda EXCLUSIVAMENTE neste formato JSON:
 
 IMPORTANTE: Responda APENAS em JSON válido, sem markdown, sem explicações adicionais."""
         
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model=model_name,
+            contents=prompt
+        )
         
         content = response.text.strip()
         

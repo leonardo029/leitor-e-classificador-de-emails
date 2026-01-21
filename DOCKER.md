@@ -16,7 +16,7 @@ Crie um arquivo `.env` (ou copie o `.env.example`) na raiz do projeto com as seg
 ```env
 #Backend
 GEMINI_API_KEY=sua_chave_aqui
-GEMINI_MODEL=gemini-3-flash-preview
+GEMINI_MODEL=gemini-2.0-flash
 GEMINI_TIMEOUT=30
 MAX_FILE_SIZE_MB=10
 MAX_TEXT_LENGTH=50000
@@ -28,8 +28,12 @@ BACKEND_HOST=backend
 BACKEND_PORT=8000
 ```
 
-**Importante:** Substitua `sua_chave_aqui` pela sua chave real da API Google Gemini.  
-**Obs:** Caso aponte o erro de que os arquivos `docker-entrypoint.sh` não estão sendo encotrados, altere a formatação dos arquivos de **CRLF** para **LF**.
+**Importante:** 
+- Substitua `sua_chave_aqui` pela sua chave real da API Google Gemini
+- O projeto agora usa o novo pacote `google-genai` (substituiu o deprecated `google-generativeai`)
+- Se você receber erro "API key was reported as leaked", gere uma nova chave em [Google AI Studio](https://aistudio.google.com/)
+
+**Obs:** Caso aponte o erro de que os arquivos `docker-entrypoint.sh` não estão sendo encontrados, altere a formatação dos arquivos de **CRLF** para **LF**.
 
 ### 2. Execute o Docker Compose
 
