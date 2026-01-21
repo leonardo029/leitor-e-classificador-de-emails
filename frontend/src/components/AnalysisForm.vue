@@ -1,14 +1,17 @@
 <template>
-  <v-card class="mb-6" elevation="2">
-    <v-card-title class="text-h5 pa-4 card-title">Analisar Email</v-card-title>
+  <v-card class="analysis-card mb-6" elevation="0">
+    <v-card-title class="card-title-custom pa-6 pb-4">
+      Analisar Email
+    </v-card-title>
     
-    <v-card-text>
+    <v-card-text class="pa-6 pt-0">
       <v-alert
         v-if="analysisStore.error"
         type="error"
         dismissible
         @click:close="analysisStore.error = null"
-        class="mb-4"
+        class="mb-6 alert-custom"
+        variant="tonal"
       >
         {{ analysisStore.error }}
       </v-alert>
@@ -17,14 +20,15 @@
         v-model="activeTab"
         :disabled="analysisStore.isLoading"
         color="primary"
-        class="mb-4"
+        class="mb-6 tabs-custom"
+        bg-color="transparent"
       >
-        <v-tab value="file">
-          <v-icon class="mr-2">mdi-file-upload</v-icon>
+        <v-tab value="file" class="tab-custom">
+          <v-icon class="mr-2" size="small">mdi-file-upload</v-icon>
           Upload de Arquivo
         </v-tab>
-        <v-tab value="text">
-          <v-icon class="mr-2">mdi-text</v-icon>
+        <v-tab value="text" class="tab-custom">
+          <v-icon class="mr-2" size="small">mdi-text</v-icon>
           Texto Direto
         </v-tab>
       </v-tabs>
@@ -40,6 +44,9 @@
             prepend-icon="mdi-file-document"
             show-size
             clearable
+            variant="outlined"
+            density="comfortable"
+            class="input-custom"
           />
         </v-window-item>
 
@@ -53,6 +60,9 @@
             label="Cole ou digite o texto do email"
             rows="8"
             clearable
+            variant="outlined"
+            density="comfortable"
+            class="input-custom"
           />
         </v-window-item>
       </v-window>
@@ -64,16 +74,17 @@
         color="primary"
         size="large"
         block
-        class="mt-4"
+        class="mt-6 submit-btn"
+        elevation="0"
       >
         <v-icon class="mr-2">mdi-send</v-icon>
         Analisar Email
       </v-btn>
 
       <v-expand-transition>
-        <div v-if="analysisStore.isLoading" class="text-center mt-4">
-          <v-progress-linear indeterminate color="primary" class="mb-2"></v-progress-linear>
-          <p class="text-caption text-primary font-weight-bold">
+        <div v-if="analysisStore.isLoading" class="loading-section mt-6">
+          <v-progress-linear indeterminate color="primary" class="mb-3 progress-custom"></v-progress-linear>
+          <p class="loading-text">
             Email sendo avaliado, essa ação pode levar alguns segundos!
           </p>
         </div>
@@ -159,3 +170,113 @@ export default defineComponent({
   }
 });
 </script>
+
+<style scoped>
+.analysis-card {
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+}
+
+.card-title-custom {
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: #000000;
+  line-height: 1.15;
+  padding-bottom: 1rem;
+}
+
+.alert-custom {
+  border-radius: 6px;
+}
+
+.tabs-custom {
+  border-bottom: 1px solid #E0E0E0;
+}
+
+.tab-custom {
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  font-size: 0.9375rem;
+  min-width: 160px;
+}
+
+.input-custom :deep(.v-field) {
+  border-radius: 6px;
+  border-color: #E0E0E0;
+}
+
+.input-custom :deep(.v-field__input) {
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: #000000;
+}
+
+.input-custom :deep(.v-label) {
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: #757575;
+}
+
+.input-custom :deep(.v-field--focused) {
+  border-color: #FF7900;
+}
+
+.submit-btn {
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  border-radius: 6px;
+  height: 48px;
+  font-size: 1rem;
+}
+
+.submit-btn:hover {
+  opacity: 0.9;
+}
+
+.submit-btn:disabled {
+  opacity: 0.4;
+}
+
+.loading-section {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.progress-custom {
+  height: 4px;
+  border-radius: 2px;
+}
+
+.loading-text {
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: #FF7900;
+  margin: 0;
+}
+
+@media (max-width: 600px) {
+  .card-title-custom {
+    font-size: 1.25rem;
+    padding: 1rem 1rem 0.75rem 1rem;
+  }
+  
+  .v-card-text {
+    padding: 1rem !important;
+  }
+  
+  .tab-custom {
+    min-width: 120px;
+    font-size: 0.875rem;
+  }
+  
+  .submit-btn {
+    height: 44px;
+    font-size: 0.9375rem;
+  }
+}
+</style>

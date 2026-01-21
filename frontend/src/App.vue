@@ -86,7 +86,7 @@ export default defineComponent({
 }
 
 .highlight-unproductive {
-  color: #FF6B35;
+  color: #FF7900;
   font-weight: 500;
   letter-spacing: -0.02em;
 }
