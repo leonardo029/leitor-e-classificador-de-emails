@@ -1,0 +1,19 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+RUN apk add --no-cache netcat-openbsd
+
+COPY package*.json ./
+
+RUN npm ci
+
+COPY . .
+
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+EXPOSE 5173
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "5173"]
