@@ -53,7 +53,7 @@ export default defineComponent({
 
 .hero-title {
   font-size: 4rem;
-  font-weight: 00;
+  font-weight: 500;
   line-height: 1.15;
   letter-spacing: -0.02em;
   color: #000000;

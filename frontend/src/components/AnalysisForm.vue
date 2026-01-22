@@ -68,7 +68,7 @@
       </v-window>
 
       <v-btn
-        @click="handleSubmit"
+        @click.prevent="handleSubmit"
         :disabled="isSubmitDisabled"
         :loading="analysisStore.isLoading"
         color="primary"
@@ -76,6 +76,7 @@
         block
         class="mt-6 submit-btn"
         elevation="0"
+        type="button"
       >
         <v-icon class="mr-2">mdi-send</v-icon>
         Analisar Email
@@ -116,16 +117,28 @@ export default defineComponent({
       if (this.analysisStore.isLoading) return true;
       
       if (this.activeTab === 'file') {
-        return !this.fileInput || this.fileInput.length === 0;
+        if (!this.fileInput) return true;
+        if (Array.isArray(this.fileInput) && this.fileInput.length === 0) return true;
+        if (Array.isArray(this.fileInput) && this.fileInput.length > 0) {
+          const file = this.fileInput[0];
+          if (!file || !(file instanceof File)) return true;
+        }
+        return false;
       }
       return this.textInput.trim().length === 0;
     },
 
     fileRules() {
       return [
-        (v: File[]) => {
-          if (!v || v.length === 0) return true;
-          const file = v[0];
+        (v: File[] | null) => {
+          if (!v) return true;
+          if (Array.isArray(v) && v.length === 0) return true;
+          
+          const fileArray = Array.isArray(v) ? v : [v];
+          if (fileArray.length === 0) return true;
+          
+          const file = fileArray[0];
+          if (!file || !(file instanceof File)) return true;
           
           const maxSize = 10 * 1024 * 1024;
           if (file.size > maxSize) {
@@ -133,7 +146,13 @@ export default defineComponent({
           }
           
           const allowedTypes = ['application/pdf', 'text/plain'];
-          if (!allowedTypes.includes(file.type)) {
+          const allowedExtensions = ['.pdf', '.txt'];
+          const fileName = file.name.toLowerCase();
+          
+          const hasValidType = allowedTypes.includes(file.type);
+          const hasValidExtension = allowedExtensions.some(ext => fileName.endsWith(ext));
+          
+          if (!hasValidType && !hasValidExtension) {
             return 'Apenas arquivos PDF ou TXT são aceitos';
           }
           
@@ -159,12 +178,42 @@ export default defineComponent({
 
   methods: {
     async handleSubmit() {
-      if (this.activeTab === 'file' && this.fileInput && this.fileInput.length > 0) {
-        await this.analysisStore.analyzeContent(this.fileInput[0], 'file');
-        this.fileInput = null;
-      } else if (this.activeTab === 'text' && this.textInput.trim()) {
-        await this.analysisStore.analyzeContent(this.textInput.trim(), 'text');
-        this.textInput = '';
+      try {
+        if (this.activeTab === 'file') {
+          if (!this.fileInput) {
+            console.error('Nenhum arquivo selecionado');
+            return;
+          }
+          
+          const fileArray = Array.isArray(this.fileInput) ? this.fileInput : [this.fileInput];
+          
+          if (fileArray.length === 0) {
+            console.error('Array de arquivos vazio');
+            return;
+          }
+          
+          const file = fileArray[0];
+          
+          if (!file || !(file instanceof File)) {
+            console.error('Arquivo inválido:', file);
+            return;
+          }
+          
+          console.log('Enviando arquivo:', file.name, file.size, file.type);
+          await this.analysisStore.analyzeContent(file, 'file');
+          this.fileInput = null;
+        } else if (this.activeTab === 'text') {
+          const text = this.textInput.trim();
+          if (!text) {
+            console.error('Texto vazio');
+            return;
+          }
+          console.log('Enviando texto:', text.length, 'caracteres');
+          await this.analysisStore.analyzeContent(text, 'text');
+          this.textInput = '';
+        }
+      } catch (error) {
+        console.error('Erro ao submeter formulário:', error);
       }
     }
   }
