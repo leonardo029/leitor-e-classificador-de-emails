@@ -59,6 +59,11 @@
               <p class="text-body-2">{{ result.summary }}</p>
             </div>
 
+            <div v-if="result.reason && result.reason !== result.summary" class="mb-3">
+              <p class="text-body-1 font-weight-medium mb-1">Razão da Classificação:</p>
+              <p class="text-body-2 text-medium-emphasis">{{ result.reason }}</p>
+            </div>
+
             <v-divider class="my-3"></v-divider>
 
             <div v-if="result.suggested_response" class="mb-3">
@@ -67,7 +72,7 @@
                 <p class="text-body-2">{{ result.suggested_response }}</p>
               </v-card>
               <v-btn
-                @click="copyToClipboard(result.suggested_response)"
+                @click="copyToClipboard(result.suggested_response || '')"
                 size="small"
                 variant="text"
                 color="primary"
@@ -78,17 +83,130 @@
               </v-btn>
             </div>
 
-            <v-expansion-panels v-if="result.nlp_debug" variant="accordion" class="mt-2">
-              <v-expansion-panel>
+            <v-expansion-panels variant="accordion" class="mt-2">
+              <v-expansion-panel v-if="result.nlp_debug">
                 <v-expansion-panel-title>
                   <v-icon class="mr-2">mdi-code-tags</v-icon>
                   Detalhes Técnicos (NLP)
                 </v-expansion-panel-title>
                 <v-expansion-panel-text>
-                  <p class="text-caption font-weight-medium mb-1">Palavras-chave detectadas:</p>
-                  <p class="text-caption text-medium-emphasis">
-                    {{ result.nlp_debug.detected_keywords }}
-                  </p>
+                  <div class="mb-3">
+                    <p class="text-caption font-weight-medium mb-1">Palavras-chave detectadas:</p>
+                    <p class="text-caption text-medium-emphasis">
+                      {{ result.nlp_debug.detected_keywords }}
+                    </p>
+                  </div>
+                  
+                  <div v-if="result.nlp_debug.keyword_analysis" class="mt-3">
+                    <p class="text-caption font-weight-medium mb-2">Análise de Keywords:</p>
+                    <v-card variant="outlined" class="pa-2">
+                      <div class="d-flex justify-space-between mb-1">
+                        <span class="text-caption">Keywords Produtivas:</span>
+                        <span class="text-caption font-weight-medium">{{ result.nlp_debug.keyword_analysis.produtivo_score }}</span>
+                      </div>
+                      <div class="d-flex justify-space-between mb-1">
+                        <span class="text-caption">Keywords Improdutivas:</span>
+                        <span class="text-caption font-weight-medium">{{ result.nlp_debug.keyword_analysis.improdutivo_score }}</span>
+                      </div>
+                      <div class="d-flex justify-space-between mb-2">
+                        <span class="text-caption">Total de Keywords:</span>
+                        <span class="text-caption font-weight-medium">{{ result.nlp_debug.keyword_analysis.total_keywords }}</span>
+                      </div>
+                      <div v-if="result.nlp_debug.keyword_analysis.matched_keywords.length > 0" class="mt-2">
+                        <p class="text-caption font-weight-medium mb-1">Keywords Encontradas:</p>
+                        <div class="d-flex flex-wrap gap-1">
+                          <v-chip
+                            v-for="(keyword, index) in result.nlp_debug.keyword_analysis.matched_keywords"
+                            :key="index"
+                            size="x-small"
+                            variant="outlined"
+                            class="text-caption"
+                          >
+                            {{ keyword }}
+                          </v-chip>
+                        </div>
+                      </div>
+                    </v-card>
+                  </div>
+                </v-expansion-panel-text>
+              </v-expansion-panel>
+
+              <v-expansion-panel v-if="result.processing_details">
+                <v-expansion-panel-title>
+                  <v-icon class="mr-2">mdi-cog</v-icon>
+                  Detalhes de Processamento
+                </v-expansion-panel-title>
+                <v-expansion-panel-text>
+                  <v-card variant="outlined" class="pa-3">
+                    <div class="mb-2">
+                      <p class="text-caption font-weight-medium mb-1">Método de Classificação:</p>
+                      <v-chip
+                        :color="getMethodColor(result.processing_details.classification_method)"
+                        size="small"
+                        variant="flat"
+                      >
+                        {{ getMethodLabel(result.processing_details.classification_method) }}
+                      </v-chip>
+                    </div>
+                    
+                    <v-divider class="my-2"></v-divider>
+                    
+                    <div class="mb-2">
+                      <p class="text-caption font-weight-medium mb-1">Configurações:</p>
+                      <div class="d-flex flex-column gap-1">
+                        <div class="d-flex align-center">
+                          <v-icon size="x-small" class="mr-1" :color="result.processing_details.used_ai ? 'success' : 'grey'">
+                            {{ result.processing_details.used_ai ? 'mdi-check-circle' : 'mdi-close-circle' }}
+                          </v-icon>
+                          <span class="text-caption">Usou IA na classificação</span>
+                        </div>
+                        <div v-if="result.processing_details.used_full_text !== null" class="d-flex align-center">
+                          <v-icon size="x-small" class="mr-1" :color="result.processing_details.used_full_text ? 'success' : 'grey'">
+                            {{ result.processing_details.used_full_text ? 'mdi-check-circle' : 'mdi-close-circle' }}
+                          </v-icon>
+                          <span class="text-caption">Enviou texto completo para IA</span>
+                        </div>
+                        <div class="d-flex align-center">
+                          <v-icon size="x-small" class="mr-1" :color="result.processing_details.used_fallback ? 'warning' : 'grey'">
+                            {{ result.processing_details.used_fallback ? 'mdi-alert-circle' : 'mdi-close-circle' }}
+                          </v-icon>
+                          <span class="text-caption">Usou fallback baseado em keywords</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div v-if="result.processing_details.keyword_analysis" class="mt-3">
+                      <p class="text-caption font-weight-medium mb-2">Análise de Keywords do Processamento:</p>
+                      <v-card variant="outlined" class="pa-2">
+                        <div class="d-flex justify-space-between mb-1">
+                          <span class="text-caption">Keywords Produtivas:</span>
+                          <span class="text-caption font-weight-medium">{{ result.processing_details.keyword_analysis.produtivo_score }}</span>
+                        </div>
+                        <div class="d-flex justify-space-between mb-1">
+                          <span class="text-caption">Keywords Improdutivas:</span>
+                          <span class="text-caption font-weight-medium">{{ result.processing_details.keyword_analysis.improdutivo_score }}</span>
+                        </div>
+                        <div class="d-flex justify-space-between mb-2">
+                          <span class="text-caption">Total de Keywords:</span>
+                          <span class="text-caption font-weight-medium">{{ result.processing_details.keyword_analysis.total_keywords }}</span>
+                        </div>
+                        <div v-if="result.processing_details.keyword_analysis.matched_keywords.length > 0" class="mt-2">
+                          <p class="text-caption font-weight-medium mb-1">Keywords Encontradas:</p>
+                          <div class="d-flex flex-wrap gap-1">
+                            <v-chip
+                              v-for="(keyword, index) in result.processing_details.keyword_analysis.matched_keywords"
+                              :key="index"
+                              size="x-small"
+                              variant="outlined"
+                              class="text-caption"
+                            >
+                              {{ keyword }}
+                            </v-chip>
+                          </div>
+                        </div>
+                      </v-card>
+                    </div>
+                  </v-card>
                 </v-expansion-panel-text>
               </v-expansion-panel>
             </v-expansion-panels>
@@ -143,6 +261,24 @@ export default defineComponent({
       return `${(score * 100).toFixed(0)}%`;
     },
 
+    getMethodLabel(method: string): string {
+      const labels: Record<string, string> = {
+        'keywords_only': 'Apenas Keywords',
+        'ai': 'Inteligência Artificial',
+        'fallback': 'Fallback (Keywords)'
+      };
+      return labels[method] || method;
+    },
+
+    getMethodColor(method: string): string {
+      const colors: Record<string, string> = {
+        'keywords_only': 'info',
+        'ai': 'primary',
+        'fallback': 'warning'
+      };
+      return colors[method] || 'grey';
+    },
+
     formatDate(dateString: string | undefined): string {
       if (!dateString) return '';
       const date = new Date(dateString);
@@ -170,3 +306,9 @@ export default defineComponent({
   }
 });
 </script>
+
+<style scoped>
+.gap-1 {
+  gap: 0.25rem;
+}
+</style>
