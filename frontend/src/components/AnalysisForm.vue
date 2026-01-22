@@ -4,7 +4,7 @@
       Analisar Email
     </v-card-title>
     
-    <v-card-text class="pa-6 pt-0">
+    <v-card-text class="card-content-custom pa-6 pt-0">
       <v-alert
         v-if="analysisStore.error"
         type="error"
@@ -12,6 +12,7 @@
         @click:close="analysisStore.error = null"
         class="mb-6 alert-custom"
         variant="tonal"
+        density="comfortable"
       >
         {{ analysisStore.error }}
       </v-alert>
@@ -35,34 +36,18 @@
 
       <v-window v-model="activeTab">
         <v-window-item value="file">
-          <v-file-input
+          <FileUploadTab
             v-model="fileInput"
             :disabled="analysisStore.isLoading"
             :rules="fileRules"
-            accept=".pdf,.txt"
-            label="Selecione um arquivo PDF ou TXT"
-            prepend-icon="mdi-file-document"
-            show-size
-            clearable
-            variant="outlined"
-            density="comfortable"
-            class="input-custom"
           />
         </v-window-item>
 
         <v-window-item value="text">
-          <v-textarea
+          <TextInputTab
             v-model="textInput"
             :disabled="analysisStore.isLoading"
-            :counter="50000"
-            :maxlength="50000"
             :rules="textRules"
-            label="Cole ou digite o texto do email"
-            rows="8"
-            clearable
-            variant="outlined"
-            density="comfortable"
-            class="input-custom"
           />
         </v-window-item>
       </v-window>
@@ -98,10 +83,15 @@
 import { defineComponent } from 'vue';
 import { mapStores } from 'pinia';
 import { useAnalysisStore } from '@/stores/analysisStore';
+import FileUploadTab from './analysis/FileUploadTab.vue';
+import TextInputTab from './analysis/TextInputTab.vue';
 
 export default defineComponent({
   name: 'AnalysisForm',
-  
+  components: {
+    FileUploadTab,
+    TextInputTab
+  },
   data() {
     return {
       activeTab: 'file' as 'file' | 'text',
@@ -225,6 +215,11 @@ export default defineComponent({
   border: 1px solid #E0E0E0;
   border-radius: 8px;
   background-color: #FFFFFF;
+  transition: box-shadow 0.2s ease;
+}
+
+.analysis-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .card-title-custom {
@@ -234,14 +229,44 @@ export default defineComponent({
   color: #000000;
   line-height: 1.15;
   padding-bottom: 1rem;
+  border-bottom: 1px solid #F5F5F5;
+}
+
+.card-content-custom {
+  padding-top: 0;
 }
 
 .alert-custom {
   border-radius: 6px;
+  border: 1px solid #FFCDD2;
+  background-color: #FFEBEE;
+}
+
+.alert-custom :deep(.v-alert__content) {
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  font-size: 0.875rem;
 }
 
 .tabs-custom {
   border-bottom: 1px solid #E0E0E0;
+}
+
+.tabs-custom :deep(.v-tab) {
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  font-size: 0.9375rem;
+  min-width: 160px;
+  padding: 0.75rem 1.5rem;
+}
+
+.tabs-custom :deep(.v-tab--selected) {
+  color: #FF7900;
+}
+
+.tabs-custom :deep(.v-slider) {
+  color: #FF7900;
 }
 
 .tab-custom {
@@ -252,26 +277,6 @@ export default defineComponent({
   min-width: 160px;
 }
 
-.input-custom :deep(.v-field) {
-  border-radius: 6px;
-  border-color: #E0E0E0;
-}
-
-.input-custom :deep(.v-field__input) {
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  color: #000000;
-}
-
-.input-custom :deep(.v-label) {
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  color: #757575;
-}
-
-.input-custom :deep(.v-field--focused) {
-  border-color: #FF7900;
-}
 
 .submit-btn {
   font-weight: 500;
@@ -280,19 +285,25 @@ export default defineComponent({
   border-radius: 6px;
   height: 48px;
   font-size: 1rem;
+  transition: all 0.2s ease;
 }
 
-.submit-btn:hover {
+.submit-btn:hover:not(:disabled) {
   opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 121, 0, 0.2);
 }
 
 .submit-btn:disabled {
   opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .loading-section {
   text-align: center;
-  padding: 1rem 0;
+  padding: 1.5rem 0;
+  background-color: #FAFAFA;
+  border-radius: 6px;
 }
 
 .progress-custom {

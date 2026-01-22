@@ -2,8 +2,8 @@
   <v-app>
     <AppHeader />
     
-    <v-main>
-      <v-container fluid class="pa-8">
+    <v-main class="main-content">
+      <v-container fluid class="container-custom">
         <v-row justify="center">
           <v-col cols="12" md="10" lg="8">
             <div class="hero-section mb-12">
@@ -44,11 +44,19 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.main-content {
+  background-color: #FFFFFF;
+}
+
+.container-custom {
+  padding: 3rem 2rem;
+}
+
 .hero-section {
   text-align: center;
   max-width: 800px;
   margin: 0 auto;
-  padding-top: 3rem;
+  padding-top: 2rem;
 }
 
 .hero-title {
@@ -80,13 +88,13 @@ export default defineComponent({
 }
 
 .highlight-productive {
-  color: rgb(0, 225, 0);
+  color: #4CAF50;
   font-weight: 500;
   letter-spacing: -0.02em;
 }
 
 .highlight-unproductive {
-  color: red;
+  color: #FF7900;
   font-weight: 500;
   letter-spacing: -0.02em;
 }
