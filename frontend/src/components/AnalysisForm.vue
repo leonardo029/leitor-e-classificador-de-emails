@@ -216,6 +216,7 @@ export default defineComponent({
   border-radius: 8px;
   background-color: #FFFFFF;
   transition: box-shadow 0.2s ease;
+  margin-top: 4rem;
 }
 
 .analysis-card:hover {

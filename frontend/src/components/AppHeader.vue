@@ -1,7 +1,7 @@
 <template>
   <v-app-bar color="white" elevation="0" class="app-bar-custom">
     <v-spacer></v-spacer>
-    <div class="d-flex align-center mr-4">
+    <div class="d-flex align-center mr-8">
       <img 
         :src="logoAutou" 
         alt="AutoU Logo" 

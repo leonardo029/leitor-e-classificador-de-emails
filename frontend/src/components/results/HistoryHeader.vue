@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="hasResults" class="mt-10" elevation="0">
+  <v-card v-if="hasResults" class="mt-12" elevation="0">
     <v-card-title class="history-header-title pa-6 pb-4 d-flex justify-space-between align-center">
       <span class="history-title-text">Histórico de Análises</span>
       <v-btn
