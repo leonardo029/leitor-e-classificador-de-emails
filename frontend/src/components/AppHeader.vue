@@ -1,7 +1,7 @@
 <template>
   <v-app-bar color="white" elevation="0" class="app-bar-custom">
     <v-spacer></v-spacer>
-    <div class="d-flex align-center mr-4">
+    <div class="d-flex align-center mr-8">
       <img 
         :src="logoAutou" 
         alt="AutoU Logo" 
@@ -30,9 +30,15 @@ export default defineComponent({
   height: 40px;
   width: auto;
   object-fit: contain;
+  transition: opacity 0.2s ease;
+}
+
+.logo-autou:hover {
+  opacity: 0.8;
 }
 
 .app-bar-custom {
   border-bottom: 1px solid #E0E0E0;
+  background-color: #FFFFFF;
 }
 </style>

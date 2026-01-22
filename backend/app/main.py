@@ -9,7 +9,7 @@ from slowapi.errors import RateLimitExceeded
 
 load_dotenv()
 
-from app.models import TextInput, ProcessResponse, ErrorResponse
+from app.models import ProcessResponse, ErrorResponse
 from app.services.file_reader import read_file
 from app.services.nlp_engine import extract_keywords
 from app.services.ai_handler import analyze_email
@@ -140,7 +140,7 @@ async def process_email(
         else:
             raise HTTPException(
                 status_code=400,
-                detail="Forneça um arquivo (multipart/form-data) ou texto (form-data ou JSON)"
+                detail="Forneça um arquivo (campo 'file') ou texto (campo 'text') via multipart/form-data"
             )
         
         if not raw_text or not raw_text.strip():
@@ -154,6 +154,29 @@ async def process_email(
         ai_result = analyze_email(raw_text, nlp_keywords)
         logger.info(f"Email classificado como: {ai_result['category']}")
         
+        # Determinar método de classificação
+        classification_method = 'ai'
+        if ai_result.get('used_keywords_only'):
+            classification_method = 'keywords_only'
+        elif ai_result.get('used_fallback'):
+            classification_method = 'fallback'
+        
+        # Preparar detalhes de processamento
+        keyword_analysis = ai_result.get('keyword_analysis', {
+            'matched_keywords': [],
+            'produtivo_score': 0,
+            'improdutivo_score': 0,
+            'total_keywords': len(nlp_keywords.split())
+        })
+        
+        processing_details = {
+            "classification_method": classification_method,
+            "used_full_text": ai_result.get('used_full_text'),
+            "used_ai": ai_result.get('used_ai', False),
+            "used_fallback": ai_result.get('used_fallback', False),
+            "keyword_analysis": keyword_analysis
+        }
+        
         response_data = {
             "status": "success",
             "data": {
@@ -161,10 +184,13 @@ async def process_email(
                 "category": ai_result['category'],
                 "confidence_score": ai_result['confidence_score'],
                 "summary": ai_result['summary'],
+                "reason": ai_result.get('reason', ai_result['summary']),
                 "suggested_response": ai_result['suggested_response'],
                 "nlp_debug": {
-                    "detected_keywords": nlp_keywords
-                }
+                    "detected_keywords": nlp_keywords,
+                    "keyword_analysis": keyword_analysis
+                },
+                "processing_details": processing_details
             }
         }
         
@@ -174,48 +200,6 @@ async def process_email(
         raise
     except Exception as e:
         logger.error(f"Erro inesperado no processamento: {str(e)}", exc_info=True)
-        raise HTTPException(
-            status_code=500,
-            detail=f"Erro interno do servidor: {str(e)}"
-        )
-
-
-@app.post("/api/v1/process-text", response_model=ProcessResponse)
-@limiter.limit(f"{RATE_LIMIT_PER_MINUTE}/minute")
-async def process_email_text(request: Request, text_input: TextInput):
-    try:
-        raw_text = text_input.text
-        
-        validate_text(raw_text)
-        
-        logger.info("Processando email via texto direto")
-        
-        nlp_keywords = extract_keywords(raw_text)
-        logger.info(f"Keywords extraídas: {nlp_keywords[:100]}...")
-        
-        ai_result = analyze_email(raw_text, nlp_keywords)
-        logger.info(f"Email classificado como: {ai_result['category']}")
-        
-        response_data = {
-            "status": "success",
-            "data": {
-                "filename": None,
-                "category": ai_result['category'],
-                "confidence_score": ai_result['confidence_score'],
-                "summary": ai_result['summary'],
-                "suggested_response": ai_result['suggested_response'],
-                "nlp_debug": {
-                    "detected_keywords": nlp_keywords
-                }
-            }
-        }
-        
-        return ProcessResponse(**response_data)
-    
-    except Exception as e:
-        logger.error(f"Erro inesperado no processamento: {str(e)}", exc_info=True)
-        if isinstance(e, (InvalidTextException, NLPProcessingException, AIAPIException)):
-            raise
         raise HTTPException(
             status_code=500,
             detail=f"Erro interno do servidor: {str(e)}"
