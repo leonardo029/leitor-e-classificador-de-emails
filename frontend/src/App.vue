@@ -8,13 +8,13 @@
           <v-col cols="12" md="10" lg="8">
             <div class="hero-section mb-12">
               <h1 class="hero-title mb-6">
-                Classificador Automático de Emails
+                Classificador de Emails
               </h1>
               <p class="hero-subtitle mb-4">
                 Classifique emails automaticamente como <span class="highlight-productive">Produtivo</span> ou <span class="highlight-unproductive">Improdutivo</span>
               </p>
               <p class="hero-description">
-                Utilize Inteligência Artificial e Processamento de Linguagem Natural para analisar seus emails
+                Utilize Inteligência Artificial e Processamento de Linguagem Natural para analisar seus emails e ter uma opção de resposta imediata!
               </p>
             </div>
             
@@ -52,8 +52,8 @@ export default defineComponent({
 }
 
 .hero-title {
-  font-size: 3.0rem;
-  font-weight: 500;
+  font-size: 4rem;
+  font-weight: 00;
   line-height: 1.15;
   letter-spacing: -0.02em;
   color: #000000;
@@ -70,7 +70,7 @@ export default defineComponent({
 }
 
 .hero-description {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 400;
   line-height: 1.5;
   letter-spacing: -0.01em;
@@ -80,13 +80,13 @@ export default defineComponent({
 }
 
 .highlight-productive {
-  color: #4CAF50;
+  color: rgb(0, 225, 0);
   font-weight: 500;
   letter-spacing: -0.02em;
 }
 
 .highlight-unproductive {
-  color: #FF7900;
+  color: red;
   font-weight: 500;
   letter-spacing: -0.02em;
 }

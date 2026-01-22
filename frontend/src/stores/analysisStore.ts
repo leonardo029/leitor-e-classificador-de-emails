@@ -53,17 +53,17 @@ export const useAnalysisStore = defineStore('analysis', {
       try {
         let response;
 
+        const formData = new FormData();
+        
         if (type === 'file') {
-          const formData = new FormData();
           formData.append('file', payload as File);
-          response = await axios.post<IApiResponse>(`${API_URL}/api/v1/process`, formData, {
-            headers: { 'Content-Type': 'multipart/form-data' }
-          });
         } else {
-          response = await axios.post<IApiResponse>(`${API_URL}/api/v1/process-text`, {
-            text: payload as string
-          });
+          formData.append('text', payload as string);
         }
+        
+        response = await axios.post<IApiResponse>(`${API_URL}/api/v1/process`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
 
         const result: IAnalysisResult = {
           ...response.data.data,
